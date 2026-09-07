@@ -13,7 +13,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Set up Java SDK
         uses: actions/setup-java@v4
@@ -29,17 +29,20 @@ jobs:
 
       - name: Sync Capacitor Android
         run: |
-          npx cap add android || true
+          npx cap android add || true
           npx cap sync android
 
       - name: Build Android App Bundle / APK
         run: |
-          cd android
-          ./gradlew assembleDebug
+          if [ -d "android" ]; then
+            cd android
+            ./gradlew assembleDebug
+          else
+            echo "Error: No se pudo generar la carpeta nativa de Android" && exit 1
+          fi
 
       - name: Upload APK Package
         uses: actions/upload-artifact@v4
         with:
           name: Stream-Ocations-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
-
