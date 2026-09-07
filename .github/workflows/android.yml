@@ -27,19 +27,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Sync Capacitor Android
+      - name: Add and Sync Android Platform
         run: |
-          npx cap android add || true
+          npx cap add android
           npx cap sync android
 
       - name: Build Android App Bundle / APK
         run: |
-          if [ -d "android" ]; then
-            cd android
-            ./gradlew assembleDebug
-          else
-            echo "Error: No se pudo generar la carpeta nativa de Android" && exit 1
-          fi
+          cd android
+          ./gradlew assembleDebug
 
       - name: Upload APK Package
         uses: actions/upload-artifact@v4
